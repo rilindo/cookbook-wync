@@ -4,32 +4,17 @@ describe 'wync::default' do
   let(:chef_run) do
     ChefSpec::SoloRunner.new(
         :platform => 'debian',
-        :version => '7.0'
+        :version => '7.0',
+        :provider => 'dpkg_package',
     ).converge(described_recipe)
   end
 
-  shared_examples_for 'all platforms' do
-    it 'includes the wync package' do
-      expect(chef_run).to include_recipe('wync::default')
-    end
+  it 'includes the wync package' do
+    expect(chef_run).to include_recipe('wync::default')
   end
 
-  shared_examples_for 'package resource' do
-    it 'installs the wync package' do
-      expect(chef_run).to install_package('wync')
-    end
-  end
-
-  context 'default attributes' do
-    it_behaves_like 'all platforms'
-    it_behaves_like 'package resource'
-  end
-
-  context 'debian platform family' do
-    context 'default attributes' do
-      it_behaves_like 'all platforms'
-      it_behaves_like 'package resource'
-    end
+  it 'installs the wync package' do
+    expect(chef_run).to install_dpkg_package('wync')
   end
 
   context 'rhel platform family' do
@@ -40,9 +25,22 @@ describe 'wync::default' do
       ).converge(described_recipe)
     end
 
-    context 'default attributes' do
-      it_behaves_like 'all platforms'
-      it_behaves_like 'package resource'
+    it 'installs the wync package' do
+      expect(chef_run).to install_yum_package('wync')
+    end
+
+  end
+
+  context 'suse platform family' do
+    let(:chef_run) do
+      ChefSpec::SoloRunner.new(
+          :platform => 'suse',
+          :version => '11.3'
+      ).converge(described_recipe)
+    end
+
+    it 'installs the wync package' do
+      expect(chef_run).to install_yum_package('wync')
     end
   end
 
@@ -54,23 +52,9 @@ describe 'wync::default' do
       ).converge(described_recipe)
     end
 
-    context 'default attributes' do
-      it_behaves_like 'all platforms'
-      it_behaves_like 'package resource'
+    it 'installs the wync package' do
+      expect(chef_run).to install_dpkg_package('wync')
     end
   end
 
-  context 'ubuntu platform family' do
-    let(:chef_run) do
-      ChefSpec::SoloRunner.new(
-          :platform => 'suse',
-          :version => '11.3'
-      ).converge(described_recipe)
-    end
-
-    context 'default attributes' do
-      it_behaves_like 'all platforms'
-      it_behaves_like 'package resource'
-    end
-  end
 end
