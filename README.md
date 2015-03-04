@@ -1,7 +1,7 @@
 # wync-cookbook
 ===============
 
-This installs Linux version of Lync.
+This installs wync, which is a Linux version of Microsoft Lync.
 
 
 Attributes
